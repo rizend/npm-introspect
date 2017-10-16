@@ -1,33 +1,30 @@
 'use strict'
 window.onload = function() {
-  
-  // EVENT HANDLERS BEGIN
 
-  $( "#searchBar" ).select2( { 
-    placeholder: 'Please search for an NPM package or upload a package.json to visualize',   
-
+  $( "#searchBar" ).select2( {
+    placeholder: 'Please search for an NPM package or upload a package.json to visualize',
+    allowClear: true,
     tags: true,
   }).on("select2:select", function(e) {
     if( $(this).val().indexOf( e.params.data.text ) === -1 ){
       $(this).find('[value="'+e.params.data.id+'"]').replaceWith(new Option( e.params.data.text, e.params.data.text, true, true ) );
     }
   });
-  var input = ""; // why not
+  $( "#searchBar" ).on( "select2:unselect", function( e ) {
+    search.triggerBuild();
+  } )
+  var input = "";
   $( ".select2-container" ).keyup(function( e ){
     if(e.which == 13 ) { //Enter keycode
       let currentSearch = $( "#searchBar").val();;
       let startsWith = false;
       currentSearch.forEach(function(search) {
-        console.log( search );
-        console.log( input );
-        console.log( search.toLowerCase().startsWith( input.toLowerCase() ) );
           if( search.toLowerCase().startsWith( input.toLowerCase() ) ) {
             startsWith = true;
           }
       });
       if( currentSearch.indexOf( input ) !== -1 ) {
         document.getElementById("searchBar").querySelector("option[value='"+ input +"']").remove();
-        console.log( "this is it" )
         search.updateSearch( input );
       } else if( startsWith ) {
         search.updateSearch( input );
@@ -36,6 +33,8 @@ window.onload = function() {
       input = document.getElementById("select2-searchBar-results").querySelector( "li" ).innerText;
     }
   });
+
+
   document.getElementById( "upload" ).addEventListener( "change", function() {
     if( document.getElementById( "upload" ).value !== "" ) {
         let input = this.files[0];
@@ -52,25 +51,18 @@ window.onload = function() {
             if( devDependencies ) {
               for( var i = 0; i < devDependencies.length; i++ ) {
                 search.updateSearch( devDependencies[ i ], false );
-              } 
+              }
             }
-           
-
           }
-          
           search.triggerBuild()
         };
         reader.readAsText( input );
     }
      document.getElementById( "upload" ).value = "";
   })
-
   document.getElementById( "searchButton" ).addEventListener( "click", function() {
     search.triggerBuild()
   });
-
-  // /EVENT HANDLERS
-
   chartHide.visibility='hidden';
   request.get('/data.json', [], request.build)
 }
@@ -94,7 +86,7 @@ var winHeight = window.innerHeight,
 
     const chartBorderHeight = winHeight*0.2,
     chartBorderWidth = (winWidth * 0.9)*0.10,
-    marginWidth = chartBorderWidth / 6,
+    marginWidth = chartBorderWidth / 4,
     marginBottom = 20,
     chartHeight= chartBorderHeight - marginBottom,
     chartWidth = chartBorderWidth - (marginWidth*2)
@@ -139,8 +131,6 @@ const request = {
   get: function(url, payload, cb){
     let terms = ""
     if( payload.search ) {
-      console.log( "payload" )
-      console.log( payload.search )
       terms = payload.search.join( "," )
     }
     url = url + "?search=" + encodeURI( terms )
@@ -152,7 +142,7 @@ const request = {
       })
       .get(function(error, d){
         if(error) request.error(error)
-        cb(JSON.parse(d)) 
+        cb(JSON.parse(d))
     })
   },
   error: function(err){
@@ -174,7 +164,7 @@ const request = {
       // can be removed if to keep placeholder
       for( var i = 0; i < data.length; i++ ) {
         search.updateSearch( data[i].title[0][1] )
-      } 
+      }
       init = true
     }
   }
@@ -255,7 +245,6 @@ buildBarChart: function(pkg, mount){
          handleClick(0, pkg)
         })
 
-
   const chart = mount.append('g')
    .on('mouseover', function() {
      d3.selectAll(this.childNodes).style('fill', function(d){
@@ -284,7 +273,7 @@ buildBarChart: function(pkg, mount){
    .attr('height', 0)
    .attr('y', chartHeight)
    .transition()
-   .duration(1000)
+   .duration(500)
    .ease(d3.easeLinear)
    .delay((d, i) => {return i * 400})
    .attr('height', (d, i) => {
@@ -308,8 +297,9 @@ buildBarChart: function(pkg, mount){
 
 const visualization = {
   buildStars: function(starAmount){
-      const star = '\u2605'; //U+2606 for other unicode star
-      document.getElementById('stars').innerText = star + ' ' + starAmount
+      const star = document.createElement('i');
+      star.className = 'fa fa-star'
+      document.getElementById('stars').innerHTML = star.outerHTML + ' ' + starAmount
   },
 
  buildForks: function(forkAmount){
@@ -317,12 +307,11 @@ const visualization = {
      while (forkMount.hasChildNodes()){
        forkMount.removeChild(forkMount.lastChild);
      }
-     const fork = document.createElement('img');
-     fork.src = 'fork.png';
-     fork.alt = 'Fork Count';
+     const fork = document.createElement('i');
+     fork.className = 'fa fa-code-fork';
      const forkCount = document.createElement('span');
      forkCount.id = 'forks';
-     forkCount.innerText = forkAmount;
+     forkCount.innerText = " " + forkAmount;
      forkMount.appendChild(fork);
      forkMount.appendChild(forkCount);
    },
@@ -418,7 +407,10 @@ buildDependencies: function(pkgDependencies){
   return "translate(" + d.y + "," + d.x + ")"; });
 
   enterNodes.append("circle")
-  .attr("r", function(d) { return 15; });
+  .attr("r", function(d) { return 15; })
+  .on("click", function( d,i ) {
+      search.updateSearch( d.data.name, true )
+  });;
 
   enterNodes.append("text")
   .attr("dy", ".25em")
@@ -442,8 +434,6 @@ buildDependencies: function(pkgDependencies){
   .text(function(d) {
     return d.data.name;
   }).on("click", function( d,i ) {
-      console.log( "clicked!" )
-      console.log( d );
       search.updateSearch( d.data.name, true )
   });
 
@@ -455,8 +445,6 @@ buildDependencies: function(pkgDependencies){
 
 const search = {
   updateSearch: function( name, triggerUpdate ) {
-    console.log( "add " + name + " to search" )
-    
     if( typeof name === "undefined" || !name || name === "" || name === "dependency" || name === "devDependency" ) {
       return false;
     }
@@ -466,19 +454,15 @@ const search = {
     } else {
       document.getElementById( "searchBar" ).querySelector( "option[value='"+ name +"']" ).remove();
     }
-    
+
     if( triggerUpdate ) {
       search.triggerBuild()
     }
-    
-  }, 
+
+  },
   triggerBuild: function() {
-    // should build based on searchbar inputs:
-    console.log( "Build based on this!" )
-    console.log( $( "#searchBar" ).val() )
     let searchTerms = $( "#searchBar" ).val();
     request.get('/data.json', { search: searchTerms }, request.build)
-
   }
 
 }

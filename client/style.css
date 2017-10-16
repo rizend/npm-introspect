@@ -6,7 +6,10 @@ ul{
   list-style: none;
   display: inline-block;
 }
-
+a {
+  text-decoration: none;
+  color: #7ce21d;
+}
 /*
                               HEADER
 */
@@ -149,7 +152,7 @@ stroke: #2C2F32;
 }
 
 .node--outdated circle {
-fill: #c10303; /*#c72210;*/
+fill: #c10303;
 stroke: #2C2F32;
 }
 

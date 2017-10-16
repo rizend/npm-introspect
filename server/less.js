@@ -8,7 +8,7 @@ exports.buildTable = function(rawData){
   try{
     data = JSON.parse(rawData)
   }catch(error){
-    throw 'Response Error, a package name may be misspelled'
+    throw 'Response Error, a package name may be misspelled, or the api is down'
   }
 
   const table = new Table({

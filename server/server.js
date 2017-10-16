@@ -18,10 +18,10 @@ module.exports.run = (args) => {
         }).catch(function(e){
           console.log(e)
       })
-      console.log('here')
       return;
     }
     else{
+      console.log(pkgs)
       getNPM(pkgs, args.d)
     }
 
@@ -57,11 +57,10 @@ const getNPM = function(pkgs, noDevDep){
     return app.get('/data.json', function(req, res){
       if( req.query.search && req.query.search.length > 0 ){
         pkgs = req.query.search.split(",")
-        console.log( "packages" )
-        console.log( pkgs )
       }
       requestData.request(pkgs, noDevDep)
       .then(function (data) {
+          console.log(data)
           res.json(data)
           res.setHeader('Content-Type', 'application/json');
           res.send(data);
