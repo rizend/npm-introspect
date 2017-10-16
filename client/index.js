@@ -152,16 +152,13 @@ const request = {
       })
       .get(function(error, d){
         if(error) request.error(error)
-        cb(JSON.parse(d)) })
-      }
-    },
-
-
+        cb(JSON.parse(d)) 
+    })
+  },
   error: function(err){
-
     const mount = document.getElementById('placeholder')
     spinner.stop();
-    console.log(error)
+    console.log(err)
     mount.innerText = 'response error :' + '\n error code in console';
   },
 
