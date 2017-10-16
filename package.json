@@ -26,7 +26,6 @@
   "homepage": "https://github.com/nohmapp/npm-landscape#readme",
   "dependencies": {
     "bluebird": "^3.4.7",
-    "body-parser": "^1.18.2",
     "chalk": "^1.1.3",
     "check-node-version": "^2.1.0",
     "cli-table": "^0.3.1",
