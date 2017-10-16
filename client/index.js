@@ -149,7 +149,7 @@ const request = {
     const mount = document.getElementById('placeholder')
     spinner.stop();
     console.log(err)
-    mount.innerText = 'response error :' + '\n error code in console';
+    mount.innerText = 'response error :' + '\n data failed to load from endpoint' + '\n error code in console';
   },
 
   build: function(data){
