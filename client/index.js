@@ -308,8 +308,9 @@ buildBarChart: function(pkg, mount){
 
 const visualization = {
   buildStars: function(starAmount){
-      const star = '\u2605'; //U+2606 for other unicode star
-      document.getElementById('stars').innerText = star + ' ' + starAmount
+      const star = document.createElement('i');
+      star.className = 'fa fa-star'
+      document.getElementById('stars').innerHTML = star.outerHTML + ' ' + starAmount
   },
 
  buildForks: function(forkAmount){
@@ -317,12 +318,11 @@ const visualization = {
      while (forkMount.hasChildNodes()){
        forkMount.removeChild(forkMount.lastChild);
      }
-     const fork = document.createElement('img');
-     fork.src = 'fork.png';
-     fork.alt = 'Fork Count';
+     const fork = document.createElement('i');
+     fork.className = 'fa fa-code-fork';
      const forkCount = document.createElement('span');
      forkCount.id = 'forks';
-     forkCount.innerText = forkAmount;
+     forkCount.innerText = " " + forkAmount;
      forkMount.appendChild(fork);
      forkMount.appendChild(forkCount);
    },

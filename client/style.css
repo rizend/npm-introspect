@@ -6,7 +6,10 @@ ul{
   list-style: none;
   display: inline-block;
 }
-
+a { 
+  text-decoration: none;
+  color: #B5C68B;
+}
 /*
                               HEADER
 */
