@@ -18,6 +18,14 @@ a {
   text-align: center;
 }
 
+#placeholder span.errorMessage {
+  font-family: arial !important;
+  color: #c72210;
+  border: 1px solid #c72210;
+  border-radius: 8px;
+  padding: 2px 20px;
+}
+
 .pkgInformation{
   display: flex;
   -webkit-flex-direction: column;
