@@ -141,15 +141,32 @@ const request = {
         return JSON.parse(xhr.responseText);
       })
       .get(function(error, d){
-        if(error) request.error(error)
-        cb(JSON.parse(d))
+        if(error) {
+          request.error(error)
+        }
+        let missingPackage = false
+        if( d.statusCode && d.statusCode == 404 ) {
+          let uri = d.options.uri
+          uri = uri.split( "/" )
+          missingPackage = uri[ uri.length - 1 ]
+        }
+        if( missingPackage ) {
+          request.error( {}, " Could not find package " + missingPackage )
+        } else {
+          cb(JSON.parse(d)) 
+        }
     })
   },
-  error: function(err){
+  error: function(err, message){
     const mount = document.getElementById('placeholder')
     spinner.stop();
     console.log(err)
-    mount.innerText = 'response error :' + '\n data failed to load from endpoint' + '\n error code in console';
+    if( !message ) {
+      message = '\n data failed to load from endpoint' + '\n error code in console'
+    } 
+    mount.innerHTML = '<br /><span class="errorMessage"><i class="fa fa-exclamation-triangle "></i> response error:' + message + "</span><br />";
+    mount.style.visibility = 'visible'
+    chartHide.visibility='hidden'
   },
 
   build: function(data){

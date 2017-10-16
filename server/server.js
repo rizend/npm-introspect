@@ -75,7 +75,7 @@ const getNPM = function(pkgs, noDevDep){
 
 const listen = function(port){
   return app.listen(port, function() {
-    console.log('Launching visiualization on port ' + port)
+    console.log('Launching visualization on port ' + port)
     opn('http://localhost:' + port + '/');
     })
   }
