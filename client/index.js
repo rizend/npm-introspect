@@ -1,28 +1,19 @@
 'use strict'
 window.onload = function() {
-  
-  // EVENT HANDLERS BEGIN
 
-  // init search select2
-  $( "#searchBar" ).select2( { 
-    placeholder: 'Please search for an NPM package or upload a package.json to visualize', 
-    allowClear: true,  
+  $( "#searchBar" ).select2( {
+    placeholder: 'Please search for an NPM package or upload a package.json to visualize',
+    allowClear: true,
     tags: true,
   }).on("select2:select", function(e) {
     if( $(this).val().indexOf( e.params.data.text ) === -1 ){
       $(this).find('[value="'+e.params.data.id+'"]').replaceWith(new Option( e.params.data.text, e.params.data.text, true, true ) );
     }
   });
-  
-
-  // remove triggers update
   $( "#searchBar" ).on( "select2:unselect", function( e ) {
     search.triggerBuild();
   } )
-
-
-  // search bar 
-  var input = ""; 
+  var input = "";
   $( ".select2-container" ).keyup(function( e ){
     if(e.which == 13 ) { //Enter keycode
       let currentSearch = $( "#searchBar").val();;
@@ -43,7 +34,7 @@ window.onload = function() {
     }
   });
 
-  // upload
+
   document.getElementById( "upload" ).addEventListener( "change", function() {
     if( document.getElementById( "upload" ).value !== "" ) {
         let input = this.files[0];
@@ -60,26 +51,18 @@ window.onload = function() {
             if( devDependencies ) {
               for( var i = 0; i < devDependencies.length; i++ ) {
                 search.updateSearch( devDependencies[ i ], false );
-              } 
+              }
             }
-           
-
           }
-          
           search.triggerBuild()
         };
         reader.readAsText( input );
     }
      document.getElementById( "upload" ).value = "";
   })
-
-  // click search
   document.getElementById( "searchButton" ).addEventListener( "click", function() {
     search.triggerBuild()
   });
-
-  // END EVENT HANDLERS
-
   chartHide.visibility='hidden';
   request.get('/data.json', [], request.build)
 }
@@ -103,7 +86,7 @@ var winHeight = window.innerHeight,
 
     const chartBorderHeight = winHeight*0.2,
     chartBorderWidth = (winWidth * 0.9)*0.10,
-    marginWidth = chartBorderWidth / 6,
+    marginWidth = chartBorderWidth / 4,
     marginBottom = 20,
     chartHeight= chartBorderHeight - marginBottom,
     chartWidth = chartBorderWidth - (marginWidth*2)
@@ -159,7 +142,7 @@ const request = {
       })
       .get(function(error, d){
         if(error) request.error(error)
-        cb(JSON.parse(d)) 
+        cb(JSON.parse(d))
     })
   },
   error: function(err){
@@ -181,7 +164,7 @@ const request = {
       // can be removed if to keep placeholder
       for( var i = 0; i < data.length; i++ ) {
         search.updateSearch( data[i].title[0][1] )
-      } 
+      }
       init = true
     }
   }
@@ -262,7 +245,6 @@ buildBarChart: function(pkg, mount){
          handleClick(0, pkg)
         })
 
-
   const chart = mount.append('g')
    .on('mouseover', function() {
      d3.selectAll(this.childNodes).style('fill', function(d){
@@ -291,7 +273,7 @@ buildBarChart: function(pkg, mount){
    .attr('height', 0)
    .attr('y', chartHeight)
    .transition()
-   .duration(1000)
+   .duration(500)
    .ease(d3.easeLinear)
    .delay((d, i) => {return i * 400})
    .attr('height', (d, i) => {
@@ -472,12 +454,12 @@ const search = {
     } else {
       document.getElementById( "searchBar" ).querySelector( "option[value='"+ name +"']" ).remove();
     }
-    
+
     if( triggerUpdate ) {
       search.triggerBuild()
     }
-    
-  }, 
+
+  },
   triggerBuild: function() {
     let searchTerms = $( "#searchBar" ).val();
     request.get('/data.json', { search: searchTerms }, request.build)

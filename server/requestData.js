@@ -27,8 +27,9 @@ const parsePkgJSON = function() {
 
         fs.readFile('package.json', 'utf-8', (error, data) => {
             if (error){
-              reject('error')
               console.log('Could not find package.json, please run in project root to parse package.json');
+              resolve(['d3']);
+            //  return
             }
             let contents = JSON.parse(data);
             const dependencies = contents && contents['dependencies'] ? Object.keys(contents['dependencies']) : []
@@ -125,7 +126,7 @@ const requestData = function( userPkgs, noDevDep ) {
     return new Promise((resolve, reject) => {
         parsePkgJSON().then((packages) => {
            if( userPkgs && userPkgs.length > 0 ) {
-            packages = [] // reset
+            packages = []
            }
            packages.push(...userPkgs)
             let packageUrls = packages.map((name) => {

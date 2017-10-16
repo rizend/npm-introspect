@@ -21,6 +21,7 @@ module.exports.run = (args) => {
       return;
     }
     else{
+      console.log(pkgs)
       getNPM(pkgs, args.d)
     }
 
@@ -59,6 +60,7 @@ const getNPM = function(pkgs, noDevDep){
       }
       requestData.request(pkgs, noDevDep)
       .then(function (data) {
+          console.log(data)
           res.json(data)
           res.setHeader('Content-Type', 'application/json');
           res.send(data);
