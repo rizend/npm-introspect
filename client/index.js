@@ -350,7 +350,7 @@ buildDescription: function(description){
 buildTitle: function(title){
     document.getElementById('name').innerText = title[0][1];
     document.getElementById('version').innerText = title[1][1];
-    $( "div.title" ).html( "<a target='_new' href='https://www.npmjs.com/package/"+title[0][1]+"'>"+$( "div.title" ).html()+"</a>" );
+    $( "div.title" ).html( "<a class='title-link' target='_new' href='https://www.npmjs.com/package/"+title[0][1]+"'>"+title[0][1]+"</a>" );
    },
 
 computeNodeCount: function(node){
