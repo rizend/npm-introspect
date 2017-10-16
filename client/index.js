@@ -34,7 +34,6 @@ window.onload = function() {
       });
       if( currentSearch.indexOf( input ) !== -1 ) {
         document.getElementById("searchBar").querySelector("option[value='"+ input +"']").remove();
-        console.log( "this is it" )
         search.updateSearch( input );
       } else if( startsWith ) {
         search.updateSearch( input );
@@ -149,8 +148,6 @@ const request = {
   get: function(url, payload, cb){
     let terms = ""
     if( payload.search ) {
-      console.log( "payload" )
-      console.log( payload.search )
       terms = payload.search.join( "," )
     }
     url = url + "?search=" + encodeURI( terms )
@@ -466,8 +463,6 @@ buildDependencies: function(pkgDependencies){
 
 const search = {
   updateSearch: function( name, triggerUpdate ) {
-    console.log( "add " + name + " to search" )
-    
     if( typeof name === "undefined" || !name || name === "" || name === "dependency" || name === "devDependency" ) {
       return false;
     }
@@ -484,12 +479,8 @@ const search = {
     
   }, 
   triggerBuild: function() {
-    // should build based on searchbar inputs:
-    console.log( "Build based on this!" )
-    console.log( $( "#searchBar" ).val() )
     let searchTerms = $( "#searchBar" ).val();
     request.get('/data.json', { search: searchTerms }, request.build)
-
   }
 
 }

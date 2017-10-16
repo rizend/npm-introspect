@@ -42,7 +42,6 @@ const parsePkgJSON = function() {
 
 const npmSearch = function(infoRequests, noDevDep) {
      return Promise.map(infoRequests, request.get, {concurrency: 6}).then(function(apiResults) {
-               console.log(apiResults)
             return pkgInfoParse(apiResults, noDevDep)
         }).catch(function(error) {
               return error
@@ -51,7 +50,6 @@ const npmSearch = function(infoRequests, noDevDep) {
 
 const pkgInfoParse = function(pkgInfo, noDevDep) {
     let filteredInfo = []
-console.log(pkgInfo)
     pkgInfo.forEach((pkg) => {
         let parsedPkg = {}
         let filteredPkg = {}
@@ -130,8 +128,6 @@ const requestData = function( userPkgs, noDevDep ) {
             packages = [] // reset
            }
            packages.push(...userPkgs)
-           console.log( "built from these" )
-           console.log( packages )
             let packageUrls = packages.map((name) => {
                 return "https://api.npms.io/v2/package/" + encodeURIComponent(name);
             })
@@ -145,7 +141,5 @@ const requestData = function( userPkgs, noDevDep ) {
 }
 
 exports.request = function(userPkgs, noDevDep) {
-  console.log('made it home alive ma')
-  console.log( userPkgs );
   return requestData( userPkgs, noDevDep )
 }
