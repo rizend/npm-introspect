@@ -3,24 +3,31 @@ window.onload = function() {
   
   // EVENT HANDLERS BEGIN
 
+  // init search select2
   $( "#searchBar" ).select2( { 
-    placeholder: 'Please search for an NPM package or upload a package.json to visualize',   
-
+    placeholder: 'Please search for an NPM package or upload a package.json to visualize', 
+    allowClear: true,  
     tags: true,
   }).on("select2:select", function(e) {
     if( $(this).val().indexOf( e.params.data.text ) === -1 ){
       $(this).find('[value="'+e.params.data.id+'"]').replaceWith(new Option( e.params.data.text, e.params.data.text, true, true ) );
     }
   });
-  var input = ""; // why not
+  
+
+  // remove triggers update
+  $( "#searchBar" ).on( "select2:unselect", function( e ) {
+    search.triggerBuild();
+  } )
+
+
+  // search bar 
+  var input = ""; 
   $( ".select2-container" ).keyup(function( e ){
     if(e.which == 13 ) { //Enter keycode
       let currentSearch = $( "#searchBar").val();;
       let startsWith = false;
       currentSearch.forEach(function(search) {
-        console.log( search );
-        console.log( input );
-        console.log( search.toLowerCase().startsWith( input.toLowerCase() ) );
           if( search.toLowerCase().startsWith( input.toLowerCase() ) ) {
             startsWith = true;
           }
@@ -36,6 +43,8 @@ window.onload = function() {
       input = document.getElementById("select2-searchBar-results").querySelector( "li" ).innerText;
     }
   });
+
+  // upload
   document.getElementById( "upload" ).addEventListener( "change", function() {
     if( document.getElementById( "upload" ).value !== "" ) {
         let input = this.files[0];
@@ -65,11 +74,12 @@ window.onload = function() {
      document.getElementById( "upload" ).value = "";
   })
 
+  // click search
   document.getElementById( "searchButton" ).addEventListener( "click", function() {
     search.triggerBuild()
   });
 
-  // /EVENT HANDLERS
+  // END EVENT HANDLERS
 
   chartHide.visibility='hidden';
   request.get('/data.json', [], request.build)
