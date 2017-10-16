@@ -418,7 +418,10 @@ buildDependencies: function(pkgDependencies){
   return "translate(" + d.y + "," + d.x + ")"; });
 
   enterNodes.append("circle")
-  .attr("r", function(d) { return 15; });
+  .attr("r", function(d) { return 15; })
+  .on("click", function( d,i ) {
+      search.updateSearch( d.data.name, true )
+  });;
 
   enterNodes.append("text")
   .attr("dy", ".25em")
@@ -442,8 +445,6 @@ buildDependencies: function(pkgDependencies){
   .text(function(d) {
     return d.data.name;
   }).on("click", function( d,i ) {
-      console.log( "clicked!" )
-      console.log( d );
       search.updateSearch( d.data.name, true )
   });
 
