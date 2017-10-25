@@ -2,7 +2,7 @@
 window.onload = function() {
 
   $( "#searchBar" ).select2( {
-    placeholder: 'Please search for an NPM package or upload a package.json to visualize',
+    placeholder: 'Please search for an NPM package or upload a package.json',
     allowClear: true,
     tags: true,
   }).on("select2:select", function(e) {
@@ -15,7 +15,7 @@ window.onload = function() {
   } )
   var input = "";
   $( ".select2-container" ).keyup(function( e ){
-    if(e.which == 13 ) { //Enter keycode
+    if(e.which == 13 ) {
       let currentSearch = $( "#searchBar").val();;
       let startsWith = false;
       currentSearch.forEach(function(search) {
@@ -151,9 +151,9 @@ const request = {
           missingPackage = uri[ uri.length - 1 ]
         }
         if( missingPackage ) {
-          request.error( {}, " Could not find package " + missingPackage )
+          request.error( {}, " Cannot find package " + missingPackage + ". Please remove to continue." )
         } else {
-          cb(JSON.parse(d)) 
+          cb(JSON.parse(d))
         }
     })
   },
@@ -163,7 +163,7 @@ const request = {
     console.log(err)
     if( !message ) {
       message = '\n data failed to load from endpoint' + '\n error code in console'
-    } 
+    }
     mount.innerHTML = '<br /><span class="errorMessage"><i class="fa fa-exclamation-triangle "></i> response error:' + message + "</span><br />";
     mount.style.visibility = 'visible'
     chartHide.visibility='hidden'

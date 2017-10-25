@@ -96,10 +96,6 @@ img{
   margin-bottom: 0;
 }
 
-#mount{
-  /*I need to move this to the center and give big letters
-  or another message that says loading in the center*/
-}
 /*
                              OUTDATED DEPENDENCIES
 */
@@ -125,7 +121,6 @@ img{
 }
 
 #finalScore{
-  /*order: ;*/
   text-align: center;
   font-size: 17px;
   font-family: sans-serif;
@@ -201,9 +196,6 @@ stroke-width: 1.5px;
 
 .scoreChart{
   display: inline-block;
-}
-.scores{
-  background-color: green;
 }
 
 .package{
