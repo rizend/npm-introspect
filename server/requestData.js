@@ -31,12 +31,18 @@ const parsePkgJSON = function() {
               resolve(['d3']);
             //  return
             }
-            let contents = JSON.parse(data);
-            const dependencies = contents && contents['dependencies'] ? Object.keys(contents['dependencies']) : []
-            const devDependencies = contents['devDependencies'] && contents ? Object.keys(contents['devDependencies']) : []
+            try {
+              let contents = JSON.parse(data);
+              const dependencies = contents && contents['dependencies'] ? Object.keys(contents['dependencies']) : []
+              const devDependencies = contents['devDependencies'] && contents ? Object.keys(contents['devDependencies']) : []
 
-            let packages = dependencies.concat(devDependencies)
-            resolve(packages)
+              let packages = dependencies.concat(devDependencies)
+              resolve(packages)
+            } catch( err ) {
+              console.log( 'Could not read package.json, is it possibly malformed?' )
+              resolve(['d3']); // ?? or should we do something else?
+            }
+            
         });
     });
 }
@@ -59,6 +65,7 @@ const pkgInfoParse = function(pkgInfo, noDevDep) {
             parsedPkg = JSON.parse(pkg)
 
         } catch (error) {
+            console.log( "invalid JSOn" )
             throw 'Error- response not valid JSON'
         }
 
