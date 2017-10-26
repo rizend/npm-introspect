@@ -1,6 +1,6 @@
 {
   "name": "npm-introspect",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "Command line tool to examine and visualize package quality",
   "main": "client/index.js",
   "scripts": {
