@@ -3,9 +3,8 @@ const schema =  require('./schema.js')
 const assert = require('assert');
 const chai = require('chai');
 chai.use(require('chai-json-schema'));
-// const Ajv = require('ajv');
-// const ajv = new Ajv();
 
+/*
 describe('requestData', function(){
   it('returns valid JSON', function(){
     requestData.parse().then(function(results){
@@ -13,6 +12,7 @@ describe('requestData', function(){
     })
   })
 })
+
 
 
 const badPkgNames = ['react', 'redux', 'reduz'];
@@ -23,7 +23,7 @@ describe('requestData', function(){
     })
   })
 })
-
+*/
 // const goodPkgNames = ['react', 'redux', 'kefir'];
 // describe('requestData', function(){
 //   it('returns valid JSON', function(){
