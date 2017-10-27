@@ -482,12 +482,12 @@ const search = {
     if( typeof name === "undefined" || !name || name === "" || name === "dependency" || name === "devDependency" ) {
       return false;
     }
-    let curSearch = document.getElementById( "searchBar" ).value;
-    if( curSearch.indexOf( name ) === -1 ) {
-      document.getElementById( "searchBar" ).appendChild( new Option( name, name, true, true ) )
-    } else {
+    let curSearch = $("#searchBar").select2('val')//document.getElementById( "searchBar" ).value;
+    if( curSearch.indexOf( name ) !== -1 ) {
       document.getElementById( "searchBar" ).querySelector( "option[value='"+ name +"']" ).remove();
     }
+    document.getElementById( "searchBar" ).appendChild( new Option( name, name, true, true ) )
+    
 
     if( triggerUpdate ) {
       search.triggerBuild()
