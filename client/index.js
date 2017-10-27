@@ -1,6 +1,18 @@
 'use strict'
 window.onload = function() {
 
+  if( screen.width < 680 ) {
+    request.error( "Unsupported Device", " Currently npm-introspect does not support mobile devices. Try again from a desktop." )
+    $("#search").hide()
+    exit()
+  }
+
+  if( typeof noConnection !== "undefined" ) {
+    request.error( "No Connection", " Unfortunately we cannot connect to npms.io at this time." )
+    $("#search").hide()
+    exit()
+  }
+
   $( "#searchBar" ).select2( {
     placeholder: 'Please search for an NPM package or upload a package.json',
     allowClear: true,
@@ -153,7 +165,12 @@ const request = {
         if( missingPackage ) {
           request.error( {}, " Cannot find package " + missingPackage + ". Please remove to continue." )
         } else {
-          cb(JSON.parse(d))
+          try {
+            let r = JSON.parse(d)
+            cb(r)
+          } catch( err ) {
+            request.error( "JSON Error", "Unfortunately, Our requests to npms.io cannot be completed at this time." )
+          }
         }
     })
   },
