@@ -479,7 +479,7 @@ buildDependencies: function(pkgDependencies){
 
 const search = {
   updateSearch: function( name, triggerUpdate ) {
-    if( typeof name === "undefined" || !name || name === "" || name === "dependency" || name === "devDependency" ) {
+    if( typeof name === "undefined" || !name || name === "" || name === "dependency" || name === "devDependency" || name === "peerDependency" ) {
       return false;
     }
     let curSearch = $("#searchBar").select2('val')//document.getElementById( "searchBar" ).value;
