@@ -62,7 +62,15 @@ window.onload = function() {
   })
   document.getElementById( "searchButton" ).addEventListener( "click", function() {
     search.triggerBuild()
-  });
+  })
+  
+  window.addEventListener('resize', function( e ) {
+      console.log( "resize" )
+      //console.log( visualization.computeNodeCount() )
+      //search.triggerBuild()
+  })
+  
+
   chartHide.visibility='hidden';
   request.get('/data.json', [], request.build)
 }
@@ -248,7 +256,7 @@ const pkgBarCharts = {
      const graph = d3.select('.scoreChart').append('svg')
      pkgBarCharts.buildBarChart(data[i], graph)
    }
-},
+},  
 
 buildBarChart: function(pkg, mount){
 
