@@ -4,6 +4,8 @@ const fs = require('fs');
 const path = require('path')
 const Promise = require("bluebird");
 const request = require('request-promise');
+const NodeCache = require( "node-cache" );
+const cache = new NodeCache({ stdTTL: 3600 });
 
 const formatString = function(string) {
     string = string.replace(/([a-z])([A-Z])/g, '$1 $2')
@@ -42,11 +44,20 @@ const parsePkgJSON = function() {
 }
 
 const npmSearch = function(infoRequests, noDevDep) {
-     return Promise.map(infoRequests, request.get, {concurrency: 6}).then(function(apiResults) {
+     return Promise.map(infoRequests, npmsApiRequest ).then(function(apiResults) {
             return pkgInfoParse(apiResults, noDevDep)
         }).catch(function(error) {
               return error
         })
+}
+
+const npmsApiRequest = function( pkg ) {
+  if( cache.get( pkg ) ) {
+    return cache.get( pkg )
+  }
+  let r = request.get( "https://api.npms.io/v2/package/" + pkg )
+  cache.set( pkg, r )
+  return r
 }
 
 const pkgInfoParse = function(pkgInfo, noDevDep) {
@@ -130,7 +141,7 @@ const requestData = function( userPkgs, noDevDep ) {
            }
            packages.push(...userPkgs)
             let packageUrls = packages.map((name) => {
-                return "https://api.npms.io/v2/package/" + encodeURIComponent(name);
+                return encodeURIComponent(name);
             })
             npmSearch(packageUrls, noDevDep).then(function(result) {
                 resolve(result)
