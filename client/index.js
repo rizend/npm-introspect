@@ -76,7 +76,7 @@ window.onload = function() {
     search.triggerBuild()
   });
   chartHide.visibility='hidden';
-  request.get('/data.json', [], request.build)
+  request.get('/data.json', {search: getInitialPackages()}, request.build);
 }
 
 var init = false;
@@ -203,6 +203,14 @@ const request = {
     }
   }
 }
+
+
+const getInitialPackages = function() {
+  let packageQueryParam = (/[?&]packages=([^&]+)/).exec(window.location.search);
+  let packages = packageQueryParam ? packageQueryParam[1] : [];
+
+  return packages.split(',');
+};
 
 
 const bChart = {
@@ -486,17 +494,23 @@ const search = {
     if( curSearch.indexOf( name ) !== -1 ) {
       document.getElementById( "searchBar" ).querySelector( "option[value='"+ name +"']" ).remove();
     }
-    document.getElementById( "searchBar" ).appendChild( new Option( name, name, true, true ) )
-    
+    document.getElementById( "searchBar" ).appendChild( new Option( name, name, true, true ) );
 
     if( triggerUpdate ) {
-      search.triggerBuild()
+      search.triggerBuild();
     }
 
   },
   triggerBuild: function() {
     let searchTerms = $( "#searchBar" ).val();
+    let newSearch = '?packages=' + searchTerms.join(',');
+    if (window.location.search !== newSearch) {
+      history.pushState({}, '', '/' + newSearch);
+    }
     request.get('/data.json', { search: searchTerms }, request.build)
   }
-
 }
+
+window.addEventListener('popstate', function(evt) {
+  window.onload();
+});
