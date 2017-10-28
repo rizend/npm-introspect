@@ -52,8 +52,9 @@ module.exports.run = (args) => {
 //   return packageUrls;
 //}
 
-const getNPM = function(pkgs, noDevDep){
-    return app.get('/data.json', function(req, res){
+const getNPM = function(defaultPkgs, noDevDep){
+    app.get('/data.json', function(req, res){
+      var pkgs = defaultPkgs;
       if( req.query.search && req.query.search.length > 0 ){
         pkgs = req.query.search.split(",")
       }
